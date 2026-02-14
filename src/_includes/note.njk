@@ -1,0 +1,22 @@
+---
+layout: base.njk
+---
+<article class="note-single">
+  <header class="note-header">
+    <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
+    {% if project %}
+      <a href="/projects/{{ project | slugify }}/" class="note-project">{{ project }}</a>
+    {% endif %}
+  </header>
+  <h1>{{ title }}</h1>
+  {% if tags and tags.length %}
+    <div class="note-tags">
+      {% for tag in tags %}
+        <a href="/tags/{{ tag | slugify }}/" class="tag-chip">{{ tag }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="note-body">
+    {{ content | safe }}
+  </div>
+</article>

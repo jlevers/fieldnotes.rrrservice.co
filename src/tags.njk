@@ -1,0 +1,19 @@
+---
+layout: base.njk
+pagination:
+  data: collections.allTags
+  size: 1
+  alias: tag
+permalink: /tags/{{ tag | slugify }}/
+eleventyComputed:
+  title: "Tag: {{ tag }}"
+---
+<h1>#{{ tag }}</h1>
+
+<div class="notes-list">
+  {% for note in collections.notes %}
+    {% if tag in note.data.tags %}
+      {% include "partials/note-card.njk" %}
+    {% endif %}
+  {% endfor %}
+</div>

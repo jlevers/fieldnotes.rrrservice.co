@@ -1,0 +1,117 @@
+name: Create Note from Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-note:
+    if: contains(github.event.issue.labels.*.name, 'note')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse issue and create note
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body;
+
+            // Parse H3-delimited form fields
+            function parseFormBody(text) {
+              const sections = {};
+              const regex = /### (.+?)\n\n([\s\S]*?)(?=\n### |\n*$)/g;
+              let match;
+              while ((match = regex.exec(text)) !== null) {
+                const key = match[1].trim().toLowerCase();
+                const value = match[2].trim();
+                if (value !== '_No response_' && value !== 'None') {
+                  sections[key] = value;
+                }
+              }
+              return sections;
+            }
+
+            const fields = parseFormBody(body);
+
+            // Extract title (remove [Note] prefix)
+            const title = issue.title.replace(/^\[Note\]\s*/i, '').trim();
+
+            // Generate slug
+            const slug = title.toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/(^-|-$)/g, '')
+              .substring(0, 60);
+
+            // Date
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+
+            // Parse fields
+            const project = fields['project'] || '';
+            const tagsRaw = fields['tags'] || '';
+            const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+            const noteBody = fields['note body'] || '';
+
+            // Build front matter
+            const tagsYaml = tags.length > 0
+              ? `tags:\n${tags.map(t => `  - ${t}`).join('\n')}`
+              : 'tags: []';
+
+            const projectLine = project
+              ? `project: "${project.replace(/"/g, '\\"')}"`
+              : '';
+
+            const frontMatterLines = [
+              '---',
+              `title: "${title.replace(/"/g, '\\"')}"`,
+              `date: ${date}`,
+            ];
+            if (projectLine) frontMatterLines.push(projectLine);
+            frontMatterLines.push(tagsYaml);
+            frontMatterLines.push('---');
+
+            const content = frontMatterLines.join('\n') + '\n\n' + noteBody + '\n';
+
+            // Write file
+            const fs = require('fs');
+            const filePath = `src/notes/${date}-${slug}.md`;
+            fs.writeFileSync(filePath, content);
+
+            core.exportVariable('NOTE_FILE', filePath);
+            core.exportVariable('NOTE_TITLE', title);
+            core.exportVariable('ISSUE_NUMBER', issue.number);
+
+      - name: Commit and push
+        run: |
+          git config user.name "fieldnotes-bot"
+          git config user.email "fieldnotes-bot@users.noreply.github.com"
+          git add "$NOTE_FILE"
+          git commit -m "Add note: $NOTE_TITLE"
+          git push
+
+      - name: Comment on issue and close
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const filePath = process.env.NOTE_FILE;
+            const slug = filePath.replace('src/notes/', '').replace('.md', '');
+            const noteUrl = `https://fieldnotes.rrrservice.co/notes/${slug}/`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt(process.env.ISSUE_NUMBER),
+              body: `Note published: ${noteUrl}\n\n(It may take a minute for Netlify to rebuild.)`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt(process.env.ISSUE_NUMBER),
+              state: 'closed'
+            });

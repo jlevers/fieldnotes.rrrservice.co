@@ -1,0 +1,19 @@
+---
+layout: base.njk
+pagination:
+  data: collections.projects
+  size: 1
+  alias: project
+permalink: /projects/{{ project | slugify }}/
+eleventyComputed:
+  title: "Project: {{ project }}"
+---
+<h1>{{ project }}</h1>
+
+<div class="notes-list">
+  {% for note in collections.notes %}
+    {% if note.data.project == project %}
+      {% include "partials/note-card.njk" %}
+    {% endif %}
+  {% endfor %}
+</div>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} | {{ site.title }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta property="og:title" content="{{ title }} | {{ site.title }}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:type" content="website">
+</head>
+<body>
+  {% include "partials/header.njk" %}
+  <main>
+    {{ content | safe }}
+  </main>
+  {% include "partials/footer.njk" %}
+  <script src="/js/search.js"></script>
+</body>
+</html>
