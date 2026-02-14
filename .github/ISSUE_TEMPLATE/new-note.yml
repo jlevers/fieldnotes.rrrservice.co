@@ -1,6 +1,6 @@
 name: New Field Note
 description: Create a new field note entry
-title: ""
+title: "New field note"
 labels: ["note"]
 body:
   - type: input
