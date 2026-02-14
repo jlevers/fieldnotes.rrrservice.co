@@ -7,9 +7,6 @@
       <a href="/projects/{{ note.data.project | slugify }}/" class="note-project">{{ note.data.project }}</a>
     {% endif %}
   </div>
-  <h3 class="note-card-title">
-    <a href="{{ note.url }}">{{ note.data.title }}</a>
-  </h3>
   <div class="note-card-body">
     {{ note.templateContent | safe }}
   </div>

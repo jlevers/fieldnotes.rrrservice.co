@@ -1,5 +1,4 @@
 ---
-title: "Field Notes is live"
 date: 2026-02-14
 project: "Site"
 tags:

@@ -70,7 +70,6 @@ jobs:
 
             const frontMatterLines = [
               '---',
-              `title: "${title.replace(/"/g, '\\"')}"`,
               `date: ${date}`,
             ];
             if (projectLine) frontMatterLines.push(projectLine);

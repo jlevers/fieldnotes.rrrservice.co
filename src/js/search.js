@@ -13,7 +13,6 @@
     var bodyEl = card.querySelector(".note-card-body");
     return {
       el: card,
-      title: (card.querySelector(".note-card-title") || {}).textContent.toLowerCase(),
       project: card.dataset.project || "",
       tags: (card.dataset.tags || "").split(",").filter(Boolean),
       body: bodyEl ? bodyEl.textContent.toLowerCase() : "",
@@ -38,7 +37,7 @@
       }
 
       if (query && show) {
-        var haystack = d.title + " " + d.project + " " + d.tags.join(" ") + " " + d.body;
+        var haystack = d.project + " " + d.tags.join(" ") + " " + d.body;
         if (haystack.indexOf(query) === -1) show = false;
       }
 

@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }} | {{ site.title }}</title>
+  <title>{{ title or site.title }} | {{ site.subtitle }}</title>
   <meta name="description" content="{{ description or site.description }}">
   <link rel="stylesheet" href="/css/style.css">
-  <meta property="og:title" content="{{ title }} | {{ site.title }}">
+  <meta property="og:title" content="{{ title or site.title }} | {{ site.subtitle }}">
   <meta property="og:description" content="{{ description or site.description }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">

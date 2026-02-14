@@ -196,15 +196,6 @@ nav a:hover { text-decoration: underline; }
 
 .note-project:hover { text-decoration: underline; }
 
-.note-card-title {
-  font-size: 18px;
-  margin: 0 0 8px;
-  font-weight: 700;
-}
-
-.note-card-title a { text-decoration: none; }
-.note-card-title a:hover { text-decoration: underline; }
-
 .note-card-body {
   font-size: 15px;
   line-height: 1.55;
@@ -256,8 +247,6 @@ nav a:hover { text-decoration: underline; }
   color: #888;
   margin-bottom: 8px;
 }
-
-.note-single h1 { font-size: 32px; }
 
 .note-tags { margin-bottom: 24px; }
 
