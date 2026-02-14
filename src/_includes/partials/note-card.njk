@@ -1,4 +1,6 @@
-<article class="note-card" data-project="{{ note.data.project | slugify }}" data-tags="{{ note.data.tags | join(',') | lower }}" data-body="{{ note.templateContent | striptags | truncate(200) | lower }}">
+{% set bodyText = note.templateContent | striptags %}
+{% set words = bodyText | wordcount %}
+<article class="note-card{% if words > 80 %} note-card--long{% endif %}" data-project="{{ note.data.project | slugify }}" data-tags="{{ note.data.tags | join(',') | lower }}">
   <div class="note-card-meta">
     <time datetime="{{ note.date | isoDate }}">{{ note.date | readableDate }}</time>
     {% if note.data.project %}
@@ -8,6 +10,9 @@
   <h3 class="note-card-title">
     <a href="{{ note.url }}">{{ note.data.title }}</a>
   </h3>
+  <div class="note-card-body">
+    {{ note.templateContent | safe }}
+  </div>
   {% if note.data.tags and note.data.tags.length %}
     <div class="note-card-tags">
       {% for tag in note.data.tags %}

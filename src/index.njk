@@ -6,18 +6,6 @@ title: All Notes
   <input type="text" id="search-input" class="search-bar" placeholder="Search notes..." autocomplete="off">
 </div>
 
-{% if collections.projects.length %}
-<div class="filter-section">
-  <div class="filter-group">
-    <span class="filter-label">Project</span>
-    <button class="filter-chip active" data-filter-project="all">All</button>
-    {% for project in collections.projects %}
-      <button class="filter-chip" data-filter-project="{{ project | slugify }}">{{ project }}</button>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-
 {% if collections.allTags.length %}
 <div class="filter-section">
   <div class="filter-group">
@@ -33,7 +21,7 @@ title: All Notes
   <span id="notes-count">{{ collections.notes.length }}</span> notes
 </div>
 
-<div id="notes-list" class="notes-list">
+<div id="notes-list" class="notes-grid">
   {% for note in collections.notes %}
     {% include "partials/note-card.njk" %}
   {% endfor %}

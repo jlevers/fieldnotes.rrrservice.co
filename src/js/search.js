@@ -7,16 +7,16 @@
   if (!notesList) return;
 
   var cards = Array.from(notesList.querySelectorAll(".note-card"));
-  var activeProject = "all";
   var activeTags = {};
 
   var cardData = cards.map(function (card) {
+    var bodyEl = card.querySelector(".note-card-body");
     return {
       el: card,
       title: (card.querySelector(".note-card-title") || {}).textContent.toLowerCase(),
       project: card.dataset.project || "",
       tags: (card.dataset.tags || "").split(",").filter(Boolean),
-      body: (card.dataset.body || "").toLowerCase(),
+      body: bodyEl ? bodyEl.textContent.toLowerCase() : "",
     };
   });
 
@@ -27,8 +27,6 @@
 
     cardData.forEach(function (d) {
       var show = true;
-
-      if (activeProject !== "all" && d.project !== activeProject) show = false;
 
       if (activeTagKeys.length > 0) {
         for (var i = 0; i < activeTagKeys.length; i++) {
@@ -57,16 +55,7 @@
 
   filterChips.forEach(function (chip) {
     chip.addEventListener("click", function () {
-      var projectFilter = chip.dataset.filterProject;
       var tagFilter = chip.dataset.filterTag;
-
-      if (projectFilter !== undefined) {
-        activeProject = projectFilter;
-        document.querySelectorAll("[data-filter-project]").forEach(function (c) {
-          c.classList.remove("active");
-        });
-        chip.classList.add("active");
-      }
 
       if (tagFilter !== undefined) {
         if (activeTags[tagFilter]) {

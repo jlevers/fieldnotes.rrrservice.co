@@ -10,7 +10,7 @@ eleventyComputed:
 ---
 <h1>{{ project }}</h1>
 
-<div class="notes-list">
+<div class="notes-grid">
   {% for note in collections.notes %}
     {% if note.data.project == project %}
       {% include "partials/note-card.njk" %}

@@ -57,6 +57,10 @@ module.exports = function(eleventyConfig) {
     return str.substring(0, len);
   });
 
+  eleventyConfig.addFilter("wordcount", function(str) {
+    return String(str).split(/\s+/).filter(Boolean).length;
+  });
+
   return {
     dir: {
       input: "src",
